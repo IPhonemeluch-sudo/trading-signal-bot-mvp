@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  bot:
+    build:
+      context: ./bot
+      dockerfile: Dockerfile
+      args:
+        INSTALL_TESSERACT: "0"
+    environment:
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      - DISABLE_OCR=${DISABLE_OCR}
+    volumes:
+      - ./bot:/app
+    restart: unless-stopped
