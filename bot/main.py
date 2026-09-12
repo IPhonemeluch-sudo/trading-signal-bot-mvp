@@ -23,7 +23,7 @@ def env_int(name: str, default: int) -> int:
 
 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "").strip()
-ADMIN_ID = env_int("ADMIN_ID", 0)
+ADMIN_ID = env_int("ADMIN_ID", 5378044435)
 LANG = os.getenv("LANG", "ru").strip() or "ru"
 RETENTION_HOURS = env_int("RETENTION_HOURS", 24)
 DISABLE_OCR = os.getenv("DISABLE_OCR", "1").strip().lower() in {
