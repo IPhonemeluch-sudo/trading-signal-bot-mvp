@@ -1,1 +1,31 @@
-# trading-signal-bot-mvp\n\nМинимальный Telegram-бот на Python с polling-режимом. В текущем MVP OCR отключён, поэтому для запуска в Replit системный Tesseract не требуется.\n\n## Запуск в Replit\n\nВ Secrets / Environment variables добавьте:\n\n- TELEGRAM_TOKEN — токен от BotFather (не публикуйте его)\n- ADMIN_ID — 5378044435\n- LANG — ru\n- RETENTION_HOURS — 24\n- DISABLE_OCR — 1\n\nФайл .replit уже содержит команду запуска:\n\npip install -r bot/requirements.txt && python bot/main.py\n\nПосле запуска проверьте в Telegram:\n\n- /start — проверка запуска бота;\n- /myid — получение своего Telegram ID;\n- фото — бот ответит, что OCR отключён.\n\n## Локальный запуск\n\ncp .env.example .env\npython -m pip install -r bot/requirements.txt\npython bot/main.py\n\nНастоящий токен храните только в переменных окружения или Secrets.\n
+# trading-signal-bot-mvp
+
+Минимальный Telegram-бот на Python с polling-режимом. В текущем MVP OCR отключён, поэтому для запуска в Replit системный Tesseract не требуется.
+
+## Запуск в Replit
+
+В Secrets / Environment variables добавьте:
+
+- TELEGRAM_TOKEN — токен от BotFather (не публикуйте его)
+- ADMIN_ID — 5378044435
+- LANG — ru
+- RETENTION_HOURS — 24
+- DISABLE_OCR — 1
+
+Файл .replit уже содержит команду запуска:
+
+pip install -r bot/requirements.txt && python bot/main.py
+
+После запуска проверьте в Telegram:
+
+- /start — проверка запуска бота;
+- /myid — получение своего Telegram ID;
+- фото — бот ответит, что OCR отключён.
+
+## Локальный запуск
+
+cp .env.example .env
+python -m pip install -r bot/requirements.txt
+python bot/main.py
+
+Настоящий токен храните только в переменных окружения или Secrets.
