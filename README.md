@@ -1,31 +1,60 @@
 # trading-signal-bot-mvp
 
-Минимальный Telegram-бот на Python с polling-режимом. В текущем MVP OCR отключён, поэтому для запуска в Replit системный Tesseract не требуется.
+Минимальный Telegram-бот на Python с polling-режимом. Бот принимает текстовые сообщения и фотографии; для фотографий выполняется OCR через Tesseract с языками `eng+rus`.
 
-## Запуск в Replit
+## Импорт в Replit
 
-В Secrets / Environment variables добавьте:
+1. Откройте Replit и выберите **Create → Import from GitHub**.
+2. Вставьте URL репозитория:
 
-- TELEGRAM_TOKEN — токен от BotFather (не публикуйте его)
-- ADMIN_ID — 5378044435
-- LANG — ru
-- RETENTION_HOURS — 24
-- DISABLE_OCR — 1
+   https://github.com/IPhonemeluch-sudo/trading-signal-bot-mvp
 
-Файл .replit уже содержит команду запуска:
+3. Импортируйте ветку `main`.
+4. Файл запуска находится в `bot/main.py`; команда запуска уже прописана в `.replit`.
 
-pip install -r bot/requirements.txt && python bot/main.py
+## Secrets / Environment variables
 
-После запуска проверьте в Telegram:
+Добавьте в Replit Secrets:
 
-- /start — проверка запуска бота;
-- /myid — получение своего Telegram ID;
-- фото — бот ответит, что OCR отключён.
+- `TELEGRAM_TOKEN` — токен от BotFather; не публикуйте его.
+- `ADMIN_ID` — Telegram ID администратора, например `5378044435`.
+- `LANG` — язык интерфейса, по умолчанию `ru`.
+- `RETENTION_HOURS` — срок хранения данных в часах, по умолчанию `24`.
+
+## OCR без Tesseract
+
+Переменная `DISABLE_OCR` необязательна:
+
+- `DISABLE_OCR=0` — бот пытается распознать текст на фото.
+- `DISABLE_OCR=1` — OCR отключён, фото принимается без распознавания.
+
+Если в среде Replit системный Tesseract не установлен, бот всё равно запускается. При отправке фото он сообщит, что OCR недоступен, и продолжит работать. Это не приводит к остановке процесса.
+
+## Проверка в Telegram
+
+- `/start` — проверить запуск бота.
+- `/myid` — получить свой Telegram ID.
+- Текстовое сообщение — проверить обработчик текста.
+- Фотография с текстом — проверить OCR или безопасную обработку ошибки, если Tesseract недоступен.
 
 ## Локальный запуск
 
+
+Скопируйте пример переменных окружения и установите зависимости:
+
+```bash
 cp .env.example .env
 python -m pip install -r bot/requirements.txt
 python bot/main.py
+```
 
-Настоящий токен храните только в переменных окружения или Secrets.
+## Docker
+
+Dockerfile устанавливает Tesseract и русский языковой пакет:
+
+```bash
+docker build -t trading-signal-bot ./bot
+docker run --env-file .env trading-signal-bot
+```
+
+Настоящий токен храните только в переменных окружения или Replit Secrets.
