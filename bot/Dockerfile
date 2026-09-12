@@ -1,9 +1,10 @@
 FROM python:3.11-slim
 
-# Install tesseract and system dependencies
+# Install Tesseract and English/Russian language data
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         tesseract-ocr \
+        tesseract-ocr-rus \
         libtesseract-dev \
         libleptonica-dev \
         pkg-config \
