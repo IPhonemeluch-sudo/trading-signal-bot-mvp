@@ -38,8 +38,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.effective_user or not update.message:
         return
     await update.message.reply_text(
-        "Бот запущен. Отправьте торговый сигнал или фотографию.
-"
+        "Бот запущен. Отправьте торговый сигнал или фотографию. "
         "Для проверки своего ID используйте /myid."
     )
 
@@ -48,9 +47,8 @@ async def myid(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.effective_user or not update.message:
         return
     user_id = update.effective_user.id
-    admin_note = "
-Вы назначены администратором." if user_id == ADMIN_ID else ""
-    await update.message.reply_text(f"Ваш Telegram ID: {user_id}{admin_note}")
+    admin_note = " Вы назначены администратором." if user_id == ADMIN_ID else ""
+    await update.message.reply_text(f"Ваш Telegram ID: {user_id}.{admin_note}")
 
 
 async def photo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
