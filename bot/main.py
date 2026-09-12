@@ -1,7 +1,11 @@
+import asyncio
+import io
 import logging
 import os
 
+import pytesseract
 from dotenv import load_dotenv
+from PIL import Image
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
 
@@ -26,7 +30,7 @@ TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "").strip()
 ADMIN_ID = env_int("ADMIN_ID", 5378044435)
 LANG = os.getenv("LANG", "ru").strip() or "ru"
 RETENTION_HOURS = env_int("RETENTION_HOURS", 24)
-DISABLE_OCR = os.getenv("DISABLE_OCR", "1").strip().lower() in {
+DISABLE_OCR = os.getenv("DISABLE_OCR", "0").strip().lower() in {
     "1",
     "true",
     "yes",
@@ -54,15 +58,36 @@ async def myid(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def photo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message:
         return
+
     if DISABLE_OCR:
         await update.message.reply_text(
             "OCR отключён (DISABLE_OCR=1). Фото получено, но распознавание текста "
             "в текущем режиме не выполняется."
         )
         return
-    await update.message.reply_text(
-        "OCR пока не подключён в этом MVP. Отправьте текстовый сигнал сообщением."
-    )
+
+    try:
+        telegram_file = await update.message.photo[-1].get_file()
+        photo_bytes = await telegram_file.download_as_bytearray()
+
+        with Image.open(io.BytesIO(photo_bytes)) as image:
+            # Tesseract вызывается синхронно, поэтому выносим его из event loop.
+            text = await asyncio.to_thread(
+                pytesseract.image_to_string,
+                image,
+                lang="eng+rus",
+            )
+
+        text = text.strip() or "(Не удалось распознать текст)"
+        await update.message.reply_text(text)
+    except pytesseract.TesseractNotFoundError:
+        logger.exception("Tesseract is not installed or is not in PATH")
+        await update.message.reply_text(
+            "OCR недоступен: Tesseract не установлен или не найден в PATH."
+        )
+    except Exception as exc:
+        logger.exception("Error processing photo")
+        await update.message.reply_text(f"Ошибка при обработке фото: {exc}")
 
 
 async def text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
